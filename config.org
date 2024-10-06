@@ -1,0 +1,92 @@
+* Config
+** Preferences
+#+BEGIN_SRC emacs-lisp
+  ;; Don't launch startup menu
+  (setq inhibit-startup-message t)
+
+  ;; Hide menus
+  (tool-bar-mode -1)
+  (menu-bar-mode -1)
+  (scroll-bar-mode -1)
+
+  ;; Don't save backups
+  (setq make-backup-files nil)
+  (setq auto-save-defaul nil)
+  (kill-buffer "*scratch*")
+
+  ;; Highlights focused line
+  (global-hl-line-mode t)
+
+  ;; Set Transparency
+  (set-frame-parameter (selected-frame) 'alpha '(80 80))
+  (add-to-list 'default-frame-alist '(alpha 80 80))
+
+  ;; Display column number
+  (setq column-number-mode t)
+
+  ;; Display line numbers
+  (add-hook 'prog-mode-hook 'display-line-numbers-mode)
+
+#+END_SRC
+
+** Ansi-Term
+ #+BEGIN_SRC emacs-lisp
+   (defvar my-term-shell "/bin/bash")
+   (defadvice ansi-term (before force-bash)
+     (interactive (list my-term-shell)))
+   (ad-activate 'ansi-term)
+   (global-set-key (kbd "<M-RET>") 'ansi-term)  
+#+END_SRC
+
+** Packages
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+  (setq package-enable-at-startup nil)
+  (add-to-list 'package-archives
+	       '("melpa" . "https://melpa.org/packages/"))
+  (package-initialize)
+
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+
+  (unless (package-installed-p 'spacemacs-theme)
+    (package-refresh-contents)
+    (package-install 'spacemacs-theme))
+
+  (use-package which-key
+    :ensure t
+    :init
+    (which-key-mode))
+
+  ;; swiper for better search
+  (use-package swiper :ensure t)
+
+  ;; ivy (for completion mechanism)
+  (use-package ivy
+    :diminish
+    :bind (("C-s" . swiper)
+	   :map ivy-minibuffer-map
+	   ("TAB" . ivy-alt-done)
+	   ("C-l" . ivy-alt-done)
+	   ("C-j" . ivy-next-line)
+	   ("C-k" . ivy-previous-line)
+	   :map ivy-switch-buffer-map
+	   ("C-k" . ivy-previous-line)
+	   ("C-l" . ivy-done)
+	   ("C-d" . ivy-switch-buffer-kill)
+	   :map ivy-reverse-i-search-map
+	   ("C-k" . ivy-previous-line)
+	   ("C-d" . ivy-reverse-i-search-kill))
+    :config
+    (ivy-mode 1))
+  (ivy-mode 1)
+
+
+#+END_SRC
+
+** buffers
+*** Enable IBuffer
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+#+END_SRC
