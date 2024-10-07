@@ -38,12 +38,18 @@
    (global-set-key (kbd "<M-RET>") 'ansi-term)  
 #+END_SRC
 
+** Org-Mode
+#+BEGIN_SRC emacs-lisp
+  (setq org-support-shift-select t)
+#+END_SRC
 ** Packages
 #+BEGIN_SRC emacs-lisp
   (require 'package)
   (setq package-enable-at-startup nil)
-  (add-to-list 'package-archives
-	       '("melpa" . "https://melpa.org/packages/"))
+
+  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			   ("gnu" . "https://elpa.gnu.org/packages/")
+			   ("org" . "https://orgmode.org/elpa/")))
   (package-initialize)
 
   (unless (package-installed-p 'use-package)
@@ -82,7 +88,9 @@
     (ivy-mode 1))
   (ivy-mode 1)
 
-
+  ;; Magit for version control interface
+  (use-package magit
+    :ensure t)
 #+END_SRC
 
 ** buffers
