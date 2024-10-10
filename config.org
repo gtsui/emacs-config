@@ -1,5 +1,21 @@
-* Config
-** Preferences
+y* Config
+** Startup
+#+BEGIN_SRC emacs-lisp
+  (require 'package)
+    (setq package-enable-at-startup nil)
+
+    (setq package-archives '(("melpa" . "https://melpa.org/packages/")
+			     ("gnu" . "https://elpa.gnu.org/packages/")
+			     ("org" . "https://orgmode.org/elpa/")))
+  (package-initialize)
+
+  (unless (package-installed-p 'use-package)
+    (package-refresh-contents)
+    (package-install 'use-package))
+  (require 'use-package)
+#+END_SRC
+
+** Display Preferences
 #+BEGIN_SRC emacs-lisp
   ;; Don't launch startup menu
   (setq inhibit-startup-message t)
@@ -27,8 +43,19 @@
   ;; Display line numbers
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
+  ;; Theme
+  (unless (package-installed-p 'spacemacs-theme)
+    (package-refresh-contents)
+    (package-install 'spacemacs-theme))
+  (load-theme 'spacemacs-dark)
+
 #+END_SRC
 
+** Keyboard
+#+BEGIN_SRC emacs-lisp
+  (global-set-key (kbd "C-z") 'undo)
+  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  #+END_SRC
 ** Ansi-Term
  #+BEGIN_SRC emacs-lisp
    (defvar my-term-shell "/bin/bash")
@@ -43,32 +70,37 @@
   (setq org-support-shift-select t)
 #+END_SRC
 ** Packages
+*** which-key
+
+`which-key` is a minor mode for Emacs that displays the key bindings following
+your currently entered incomplete command (a prefix) in a popup. For example,
+after enabling the minor mode if you enter C-x and wait for the default of 1
+second the minibuffer will expand with all of the available key bindings that
+follow C-x (or as many as space allows given your settings).
+
 #+BEGIN_SRC emacs-lisp
-  (require 'package)
-  (setq package-enable-at-startup nil)
-
-  (setq package-archives '(("melpa" . "https://melpa.org/packages/")
-			   ("gnu" . "https://elpa.gnu.org/packages/")
-			   ("org" . "https://orgmode.org/elpa/")))
-  (package-initialize)
-
-  (unless (package-installed-p 'use-package)
-    (package-refresh-contents)
-    (package-install 'use-package))
-
-  (unless (package-installed-p 'spacemacs-theme)
-    (package-refresh-contents)
-    (package-install 'spacemacs-theme))
-
   (use-package which-key
     :ensure t
     :init
-    (which-key-mode))
+    (which-key-mode))  
+#+END_SRC
 
-  ;; swiper for better search
-  (use-package swiper :ensure t)
+*** swiper
 
-  ;; ivy (for completion mechanism)
+Swiper is an alternative to isearch that uses Ivy to show an overview of all matches.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package swiper
+    :ensure t)
+#+END_SRC
+
+*** ivy
+
+Ivy is a generic completion mechanism for Emacs. While it operates similarly to
+other completion schemes such as icomplete-mode, Ivy aims to be more efficient,
+smaller, simpler, and smoother to use yet highly customizable.
+
+#+BEGIN_SRC emacs-lisp
   (use-package ivy
     :diminish
     :bind (("C-s" . swiper)
@@ -87,14 +119,33 @@
     :config
     (ivy-mode 1))
   (ivy-mode 1)
+#+END_SRC
 
-  ;; Magit for version control interface
+*** magit
+
+#+BEGIN_SRC emacs-lisp
   (use-package magit
     :ensure t)
 #+END_SRC
 
-** buffers
-*** Enable IBuffer
+
+
+	    
+*** projectile
+
+Projectile is a project interaction library for Emacs. Its goal is to provide a
+nice set of features operating on a project level without introducing external
+dependencies (when feasible).
+
+Common shortcuts:
+
+C-c p f to find files within a project.
+C-c p p to switch between projects.
+C-c p s g to search for text using grep.
+
 #+BEGIN_SRC emacs-lisp
-  (global-set-key (kbd "C-x C-b") 'ibuffer)
+  (use-package projectile
+    :ensure t
+    :bind-keymap ("C-c p" . projectile-command-map)
+    :config (projectile-mode +1))
 #+END_SRC
