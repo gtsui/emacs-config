@@ -44,10 +44,9 @@ y* Config
   (add-hook 'prog-mode-hook 'display-line-numbers-mode)
 
   ;; Theme
-  (unless (package-installed-p 'spacemacs-theme)
-    (package-refresh-contents)
-    (package-install 'spacemacs-theme))
-  (load-theme 'spacemacs-dark)
+  (use-package spacemacs-theme
+    :ensure t
+    :init (load-theme 'spacemacs-dark t))
 
 #+END_SRC
 
