@@ -20,6 +20,9 @@
   ;; Don't launch startup menu
   (setq inhibit-startup-message t)
 
+  ;; Visible bell (mute alert sounds)
+  (setq visible-bell t)
+  
   ;; Hide menus
   (tool-bar-mode -1)
   (menu-bar-mode -1)
