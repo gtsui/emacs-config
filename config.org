@@ -164,8 +164,11 @@ C-c p s g to search for text using grep.
 Common shortcuts:
 
 M-.                                - Jump to definition
+M-,                                - Jump backwards from definition
 M-x RET lsp-find-references        - Find all references to a particular function/class/variable
 M-x RET lsp-rename                 - Rename symbol and update all occurrences in project
+M-x RET lsp-rename-and-save        - Rename symbol, update occurrences, then save buffers (see `Custom Functions`)
+M-x RET lsp-format-buffer          - Autoformat file
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :ensure t
@@ -178,6 +181,7 @@ M-x RET lsp-rename                 - Rename symbol and update all occurrences in
     :hook (python-mode . (lambda ()
 			   (require 'lsp-pyright)
 			   (lsp))))
+
 #+END_SRC
 ** Custom Functions
 #+BEGIN_SRC emacs-lisp
