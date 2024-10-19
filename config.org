@@ -160,6 +160,12 @@ C-c p s g to search for text using grep.
     :config (projectile-mode +1))
 #+END_SRC
 *** lsp-mode
+
+Common shortcuts:
+
+M-.                                - Jump to definition
+M-x RET lsp-find-references        - Find all references to a particular function/class/variable
+M-x RET lsp-rename                 - Rename symbol and update all occurrences in project
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :ensure t
@@ -173,6 +179,15 @@ C-c p s g to search for text using grep.
 			   (require 'lsp-pyright)
 			   (lsp))))
 #+END_SRC
+** Custom Functions
+#+BEGIN_SRC emacs-lisp
+  (defun lsp-rename-and-save ()
+    "Perform `lsp-rename` and then save all modified buffers."
+    (interactive)
+    (call-interactively 'lsp-rename)
+    (save-some-buffers t))
+#+END_SRC
+
 * Notes
 ** use-package
 Common `use-package` keywords:
