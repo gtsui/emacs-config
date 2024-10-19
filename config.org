@@ -162,6 +162,20 @@ C-c p s g to search for text using grep.
     :bind-keymap ("C-c p" . projectile-command-map)
     :config (projectile-mode +1))
 #+END_SRC
+*** company-mode
+
+Company is a text and code completion framework for Emacs. The name stands for
+"complete anything". It uses pluggable back-ends and front-ends to retrieve
+and display completion candidates.
+
+#+BEGIN_SRC emacs-lisp
+  (use-package company
+    :ensure t
+    :config
+    (setq company-minimum-prefix-length 1)
+    (global-company-mode))
+#+END_SRC
+
 *** lsp-mode
 
 Common shortcuts:
@@ -176,8 +190,10 @@ M-x RET lsp-format-buffer          - Autoformat file
   (use-package lsp-mode
     :ensure t
     :hook (python-mode . lsp)
-    :commands lsp)
-
+    :commands lsp
+    :config
+    (setq lsp-completion-provider :capf))
+  
   ;; Python LSP (Pyright)
   (use-package lsp-pyright
     :ensure t
