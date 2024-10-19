@@ -72,6 +72,7 @@
 
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
+  (setq org-startup-folded t)
   (setq org-support-shift-select t)
 #+END_SRC
 ** Packages
