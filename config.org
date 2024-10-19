@@ -159,7 +159,20 @@ C-c p s g to search for text using grep.
     :bind-keymap ("C-c p" . projectile-command-map)
     :config (projectile-mode +1))
 #+END_SRC
+*** lsp-mode
+#+BEGIN_SRC emacs-lisp
+  (use-package lsp-mode
+    :ensure t
+    :hook (python-mode . lsp)
+    :commands lsp)
 
+  ;; Python LSP (Pyright)
+  (use-package lsp-pyright
+    :ensure t
+    :hook (python-mode . (lambda ()
+			   (require 'lsp-pyright)
+			   (lsp))))
+#+END_SRC
 * Notes
 ** use-package
 Common `use-package` keywords:
