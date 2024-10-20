@@ -71,15 +71,6 @@
   (global-set-key (kbd "C-z") 'undo)
   (global-set-key (kbd "C-x C-b") 'ibuffer)
   #+END_SRC
-** Ansi-Term
- #+BEGIN_SRC emacs-lisp
-   (defvar my-term-shell "/bin/bash")
-   (defadvice ansi-term (before force-bash)
-     (interactive (list my-term-shell)))
-   (ad-activate 'ansi-term)
-   (global-set-key (kbd "<M-RET>") 'ansi-term)  
-#+END_SRC
-
 ** Org-Mode
 #+BEGIN_SRC emacs-lisp
   (setq org-startup-folded t)
@@ -190,6 +181,8 @@ and display completion candidates.
     :ensure t
     :config
     (setq company-minimum-prefix-length 1)
+    (define-key company-active-map (kbd "TAB") 'company-complete-selection)
+    (define-key company-active-map (kbd "<tab>") 'company-complete-selection)
     (global-company-mode))
 
   (use-package company-box
@@ -197,6 +190,22 @@ and display completion candidates.
     :hook (company-mode . company-box-mode))
 #+END_SRC
 
+*** tree-sitter
+#+BEGIN_SRC emacs-lisp
+  (use-package tree-sitter
+    :ensure t
+    :hook ((python-mode . tree-sitter-mode))
+    :config
+    (use-package tree-sitter-langs
+      :ensure t))
+
+  (use-package tree-sitter-langs
+    :ensure t
+    :after tree-sitter
+    :config
+    (global-tree-sitter-mode)
+    (add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode))
+#+END_SRC
 *** lsp-mode
 
 Common shortcuts:
@@ -210,11 +219,12 @@ M-x RET lsp-format-buffer          - Autoformat file
 #+BEGIN_SRC emacs-lisp
   (use-package lsp-mode
     :ensure t
-    :hook (python-mode . lsp)
+    :hook ((python-mode . lsp)
+	   (lsp-mode . lsp-ui-mode))
     :commands lsp
     :config
     (setq lsp-completion-provider :capf))
-  
+
   ;; Python LSP (Pyright)
   (use-package lsp-pyright
     :ensure t
@@ -222,7 +232,16 @@ M-x RET lsp-format-buffer          - Autoformat file
 			   (require 'lsp-pyright)
 			   (lsp))))
 
-#+END_SRC
+  ;; UI tooltip
+  (use-package lsp-ui
+    :ensure t
+    :commands lsp-ui-mode
+    :config
+    (setq lsp-ui-doc-delay 0.0)
+    (setq lsp-ui-sideline-show-hover t)
+    (setq lsp-ui-sideline-show-code-actions t))
+
+    #+END_SRC
 ** Custom Functions
 #+BEGIN_SRC emacs-lisp
   (defun lsp-rename-and-save ()
